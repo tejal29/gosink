@@ -2,6 +2,7 @@ package runner
 
 import (
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/tejal29/gosink/pkg/worker"
@@ -9,7 +10,7 @@ import (
 
 // Run executes the work in w and returns the order
 // the work was done as well as results.
-func run(inParallel bool, w []int) (string, []worker.Result) {
+func Run(inParallel bool, w []int, out io.Writer) (string, []worker.Result) {
 
 	in := make(chan worker.Result, 1)
 	defer close(in)
@@ -23,6 +24,7 @@ func run(inParallel bool, w []int) (string, []worker.Result) {
 	for i := 0; i < expectedWork; i++ {
 		res := <-in
 		stream[i] = fmt.Sprintf("%d", int(res))
+		out.Write([]byte(stream[i]))
 	}
 	return strings.Join(stream, ","), results
 }

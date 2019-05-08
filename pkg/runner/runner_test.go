@@ -1,7 +1,9 @@
 package runner
 
 import (
+	"io/ioutil"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 
@@ -39,8 +41,11 @@ func TestRun(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
+		out := ioutil.Discard
 		t.Run(test.description, func(t *testing.T) {
-			stream, results := run(test.isParallel, test.work)
+			stream, results := Run(test.isParallel, test.work, out)
+			// for testing
+			worker.SleepUnit = time.Millisecond
 			if stream != test.resultSeen {
 				t.Errorf("expected %s, Got %s", test.resultSeen, stream)
 			}

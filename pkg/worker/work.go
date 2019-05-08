@@ -8,6 +8,8 @@ import (
 // Result is work result
 type Result int
 
+var SleepUnit = time.Second
+
 // InSequence does work in sequence and waits for the previous work
 // item to complete. it should write results on channel in order of
 // input work array.
@@ -35,7 +37,7 @@ func InParallel(ch chan Result, work []int) []Result {
 
 // build sleep for time mentioned in num and returns the same number
 func executeWork(num int) Result {
-	time.Sleep(time.Duration(num) * time.Millisecond)
+	time.Sleep(time.Duration(num) * SleepUnit)
 	return Result(num)
 }
 
